@@ -141,10 +141,14 @@ def expand_emoji_shorthand(text: str) -> str:
     Supports both English (:smile:) and Persian (:لبخند:) formats.
     Also supports multipliers like :smile*3: or :لبخند*2:
     """
+    logger.info(f"Input text: '{text}'")
+    
     def replace_shorthand(match):
         full_match = match.group(0)
         emoji_name = match.group(1)
         multiplier = match.group(2)
+        
+        logger.info(f"Match found - Full: '{full_match}', Name: '{emoji_name}', Multiplier: '{multiplier}'")
         
         # Remove any trailing colons from emoji_name
         emoji_name = emoji_name.strip(':')
@@ -155,8 +159,10 @@ def expand_emoji_shorthand(text: str) -> str:
             try:
                 count = int(multiplier)
                 count = max(1, min(count, 10))  # Limit between 1-10
+                logger.info(f"Multiplier parsed: {count}")
             except ValueError:
                 count = 1
+                logger.info(f"Multiplier parsing failed, using 1")
         
         # Try to get emoji
         emoji_char = None
@@ -164,6 +170,7 @@ def expand_emoji_shorthand(text: str) -> str:
         # First try Persian mapping
         if emoji_name in PERSIAN_EMOJI_MAP:
             emoji_char = PERSIAN_EMOJI_MAP[emoji_name]
+            logger.info(f"Found Persian emoji: '{emoji_name}' -> '{emoji_char}'")
         else:
             # Try English emoji conversion
             try:
@@ -171,21 +178,39 @@ def expand_emoji_shorthand(text: str) -> str:
                 # If it didn't convert (still has colons), it's not a valid emoji
                 if emoji_char.startswith(':') and emoji_char.endswith(':'):
                     emoji_char = None
+                    logger.info(f"English emoji not found: '{emoji_name}'")
+                else:
+                    logger.info(f"Found English emoji: '{emoji_name}' -> '{emoji_char}'")
             except:
                 emoji_char = None
+                logger.info(f"Error converting English emoji: '{emoji_name}'")
         
         # Return the result
         if emoji_char:
-            return emoji_char * count
+            result = emoji_char * count
+            logger.info(f"Final result: '{result}' (repeated {count} times)")
+            return result
         else:
             # If no emoji found, return original text
+            logger.info(f"No emoji found, returning original: '{full_match}'")
             return full_match
     
-    # Updated pattern to better handle multipliers
-    # Matches :emoji_name*number: OR :emoji_name*number OR :emoji_name:
-    pattern = r':([^:*\s]+)(?:\*(\d+))?:?'
+    # Multiple patterns to try
+    patterns = [
+        r':([^:*\s]+)\*(\d+):?',  # :smile*3: or :smile*3
+        r':([^:*\s]+)\*(\d+)',     # :smile*3
+        r':([^:*\s]+):?'           # :smile: or :smile (no multiplier)
+    ]
     
-    result = re.sub(pattern, replace_shorthand, text)
+    result = text
+    for pattern in patterns:
+        logger.info(f"Trying pattern: {pattern}")
+        new_result = re.sub(pattern, replace_shorthand, result)
+        if new_result != result:
+            result = new_result
+            break
+    
+    logger.info(f"Final output: '{result}'")
     return result
 
 async def inline_query(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
