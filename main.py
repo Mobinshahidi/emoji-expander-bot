@@ -223,8 +223,14 @@ def main() -> None:
         logger.error("BOT_TOKEN environment variable not set!")
         return
     
-    # Create the Application
+    # Create the Application with proxy support (uncomment if needed)
+    # proxy_url = "http://your-proxy:port"  # or socks5://your-proxy:port
     application = Application.builder().token(token).build()
+    
+    # If you need proxy, use this instead:
+    # from telegram.request import HTTPXRequest
+    # request = HTTPXRequest(proxy=proxy_url)
+    # application = Application.builder().token(token).request(request).build()
     
     # Add handlers
     application.add_handler(InlineQueryHandler(inline_query))
@@ -235,11 +241,12 @@ def main() -> None:
     # Start the bot
     if os.getenv('ENVIRONMENT') == 'production':
         # For deployment (Railway, Render, etc.)
+        webhook_url = os.getenv('RENDER_EXTERNAL_URL', 'https://your-app-name.onrender.com')
         application.run_webhook(
             listen="0.0.0.0",
             port=port,
             url_path=token,
-            webhook_url=f"https://{os.getenv('RAILWAY_PUBLIC_DOMAIN', 'your-app-name.up.railway.app')}/{token}"
+            webhook_url=f"{webhook_url}/{token}"
         )
     else:
         # For local development
