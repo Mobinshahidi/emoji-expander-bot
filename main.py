@@ -181,9 +181,9 @@ def expand_emoji_shorthand(text: str) -> str:
             # If no emoji found, return original text
             return full_match
     
-    # Pattern to match :emoji_name: or :emoji_name*number:
-    # This pattern handles both English and Persian (Unicode) characters
-    pattern = r':([^:*]+)(?:\*(\d+))?:*'
+    # Updated pattern to better handle multipliers
+    # Matches :emoji_name*number: OR :emoji_name*number OR :emoji_name:
+    pattern = r':([^:*\s]+)(?:\*(\d+))?:?'
     
     result = re.sub(pattern, replace_shorthand, text)
     return result
