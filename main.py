@@ -239,18 +239,9 @@ def main() -> None:
     port = int(os.getenv('PORT', 8000))
     
     # Start the bot
-    if os.getenv('ENVIRONMENT') == 'production':
-        # For deployment (Railway, Render, etc.)
-        webhook_url = os.getenv('RENDER_EXTERNAL_URL', 'https://your-app-name.onrender.com')
-        application.run_webhook(
-            listen="0.0.0.0",
-            port=port,
-            url_path=token,
-            webhook_url=f"{webhook_url}/{token}"
-        )
-    else:
-        # For local development
-        application.run_polling()
+    # Use polling for simplicity (works without webhook setup)
+    logger.info("Starting bot with polling...")
+    application.run_polling()
 
 if __name__ == '__main__':
     main()
