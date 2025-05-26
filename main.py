@@ -139,16 +139,16 @@ def expand_emoji_shorthand(text: str) -> str:
     """
     Expand emoji shorthands in text to actual emojis.
     Supports both English (:smile:) and Persian (:لبخند:) formats.
-    Also supports multipliers like :smile*3: or :لبخند*2:
+    Also supports multipliers like :smile3 or :لبخند2 (number at the end)
     """
     logger.info(f"Input text: '{text}'")
     
-    def replace_shorthand_with_multiplier(match):
+    def replace_shorthand(match):
         full_match = match.group(0)
         emoji_name = match.group(1)
-        multiplier = match.group(2)
+        multiplier = match.group(2) if len(match.groups()) > 1 and match.group(2) else None
         
-        logger.info(f"Multiplier match - Full: '{full_match}', Name: '{emoji_name}', Multiplier: '{multiplier}'")
+        logger.info(f"Match found - Full: '{full_match}', Name: '{emoji_name}', Multiplier: '{multiplier}'")
         
         # Remove any trailing colons from emoji_name
         emoji_name = emoji_name.strip(':')
@@ -164,39 +164,6 @@ def expand_emoji_shorthand(text: str) -> str:
                 count = 1
         
         # Try to get emoji
-        emoji_char = get_emoji(emoji_name)
-        
-        # Return the result
-        if emoji_char:
-            result = emoji_char * count
-            logger.info(f"Final result: '{result}' (repeated {count} times)")
-            return result
-        else:
-            logger.info(f"No emoji found, returning original: '{full_match}'")
-            return full_match
-    
-    def replace_shorthand_simple(match):
-        full_match = match.group(0)
-        emoji_name = match.group(1)
-        
-        logger.info(f"Simple match - Full: '{full_match}', Name: '{emoji_name}'")
-        
-        # Remove any trailing colons from emoji_name
-        emoji_name = emoji_name.strip(':')
-        
-        # Try to get emoji
-        emoji_char = get_emoji(emoji_name)
-        
-        # Return the result
-        if emoji_char:
-            logger.info(f"Simple result: '{emoji_char}'")
-            return emoji_char
-        else:
-            logger.info(f"No emoji found, returning original: '{full_match}'")
-            return full_match
-    
-    def get_emoji(emoji_name):
-        """Helper function to get emoji from name"""
         emoji_char = None
         
         # First try Persian mapping
@@ -217,20 +184,21 @@ def expand_emoji_shorthand(text: str) -> str:
                 emoji_char = None
                 logger.info(f"Error converting English emoji: '{emoji_name}'")
         
-        return emoji_char
+        # Return the result
+        if emoji_char:
+            result = emoji_char * count
+            logger.info(f"Final result: '{result}' (repeated {count} times)")
+            return result
+        else:
+            logger.info(f"No emoji found, returning original: '{full_match}'")
+            return full_match
     
-    # First try to match patterns with multipliers
-    multiplier_pattern = r':([^:*\s]+)\*(\d+):?'
-    logger.info(f"Trying multiplier pattern: {multiplier_pattern}")
-    result = re.sub(multiplier_pattern, replace_shorthand_with_multiplier, text)
+    # Single pattern that handles both cases:
+    # :smile3: or :smile3 (with number) OR :smile: or :smile (without number)
+    pattern = r':([a-zA-Z\u0600-\u06FF_]+)(\d+)?:?'
     
-    if result != text:
-        logger.info(f"Multiplier pattern worked!")
-    else:
-        # If no multipliers found, try simple pattern
-        simple_pattern = r':([^:*\s]+):?'
-        logger.info(f"Trying simple pattern: {simple_pattern}")
-        result = re.sub(simple_pattern, replace_shorthand_simple, text)
+    logger.info(f"Using pattern: {pattern}")
+    result = re.sub(pattern, replace_shorthand, text)
     
     logger.info(f"Final output: '{result}'")
     return result
