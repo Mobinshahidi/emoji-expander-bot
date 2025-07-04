@@ -1,77 +1,299 @@
-# grammY Vercel boilerplate
+# 🚀 Emoji Expander Bot
 
-[grammY](https://grammy.dev/) boilerplate to develop and host telegram bots on [Vercel](https://vercel.com/).
+A powerful Telegram inline bot that expands emoji keywords into multiple emojis with support for both English and Persian languages, plus Persian number input.
 
-## Features
+**🤖 Bot**: [@emoji_expander_bot](https://t.me/emoji_expander_bot)
 
--   Typescript support
--   Linting and formatting preconfigured
--   Development friendly environment with Nodemon
+## ✨ Features
 
-## Development
+- 🔤 **Bilingual Support**: Works with both English and Persian keywords
+- 🔢 **Persian Numbers**: Supports Persian numerals (۰۱۲۳۴۵۶۷۸۹)
+- ⚡ **Inline Queries**: Use in any chat without adding the bot
+- 🎯 **Smart Multiplication**: Repeat emojis any number of times
+- 🌐 **Serverless**: Deployed on Vercel for fast response times
 
-```bash
-# Copy the .env example and change the BOT_TOKEN to match yours
-$ cp .env.example .env
-# Install the dependencies
-$ npm install
-# Run the development environment
-$ npm run dev
+## 🎮 How to Use
+
+### Basic Usage
+Type `@emoji_expander_bot` followed by an emoji keyword in any Telegram chat:
+
+```
+@emoji_expander_bot smile
+→ 😂
+
+@emoji_expander_bot heart
+→ ❤️
 ```
 
-## Deployment
+### Multiply Emojis
+Add a number after a dot to repeat emojis:
 
-#### Terminal
+```
+@emoji_expander_bot smile.5
+→ 😂😂😂😂😂
 
-```bash
-# Install vercel cli if you don't have it yet
-$ npm i -g vercel
-# Deploy the project
-$ vercel --prod
+@emoji_expander_bot fire.10
+→ 🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥
 ```
 
-#### Vercel
+### Persian Support
+Works with Persian keywords and numbers:
 
-On your project's page, go to Settings > Environment Variables and add the following variables:
+```
+@emoji_expander_bot خنده.۵
+→ 😂😂😂😂😂
 
-| Name        | Value            |
-| ----------- | ---------------- |
-| `BOT_TOKEN` | _your bot token_ |
-
-> You can also set the webhook URL manually accessing `https://api.telegram.org/bot<bot_token>/setWebhook?url=<webhook_url>` on your browser
-
-Finally, you should see a "Hello, world!" from the bot when typing `/hello` in chat.
-
-## Using Express instead of Vercel's API
-
-By default `grammy-vercel-boilerplate` does not use extra dependencies, but in case you want to use Express, first add it as a dependency
-
-```sh
-$ npm install express
+@emoji_expander_bot قلب.۳
+→ ❤️❤️❤️
 ```
 
-And then edit the contents of `api/index.ts` to
+## 📋 Supported Emojis
 
-```js
-require("../src/index");
+### 😊 Happy/Positive
+| English | Persian | Emoji |
+|---------|---------|-------|
+| `smile` | `خنده` | 😂 |
+| `happy` | `خوشحال` | 😊 |
+| `joy` | `شادی` | 😄 |
+| `laugh` | `قهقهه` | 🤣 |
+| `grin` | `پوزخند` | 😁 |
 
-import express from "express";
-import { webhookCallback } from "grammy";
+### 😢 Sad/Negative
+| English | Persian | Emoji |
+|---------|---------|-------|
+| `sad` | `غمگین` | 🥲 |
+| `cry` | `گریه` | 😢 |
+| `tears` | `اشک` | 😭 |
+| `disappointed` | `ناامید` | 😞 |
+| `worried` | `نگران` | 😟 |
 
-import bot from "../src/core/bot";
+### ❤️ Love/Heart
+| English | Persian | Emoji |
+|---------|---------|-------|
+| `heart` | `قلب` | ❤️ |
+| `love` | `عشق` | 😍 |
+| `kiss` | `بوس` | 😘 |
+| `hearteyes` | `عاشق` | 😍 |
 
-const app = express();
+### 😠 Anger/Frustrated
+| English | Persian | Emoji |
+|---------|---------|-------|
+| `angry` | `عصبانی` | 😠 |
+| `rage` | `خشم` | 😡 |
+| `mad` | `دیوانه` | 🤬 |
 
-app.use(express.json());
-app.use(`/api/index`, webhookCallback(bot));
+### 😲 Surprise/Shock
+| English | Persian | Emoji |
+|---------|---------|-------|
+| `surprise` | `تعجب` | 😲 |
+| `shock` | `شوک` | 😱 |
+| `wow` | `واو` | 😮 |
 
-export default app;
+### 😎 Cool/Confident
+| English | Persian | Emoji |
+|---------|---------|-------|
+| `cool` | `باحال` | 😎 |
+| `sunglasses` | `عینکی` | 😎 |
+| `wink` | `چشمک` | 😉 |
+
+### 🤔 Thinking/Confused
+| English | Persian | Emoji |
+|---------|---------|-------|
+| `thinking` | `فکر` | 🤔 |
+| `confused` | `گیج` | 😕 |
+
+### 😴 Tired/Sick
+| English | Persian | Emoji |
+|---------|---------|-------|
+| `tired` | `خسته` | 😴 |
+| `sick` | `بیمار` | 🤒 |
+| `fever` | `تب` | 🤒 |
+
+### 👍 Gestures
+| English | Persian | Emoji |
+|---------|---------|-------|
+| `thumbsup` | `لایک` | 👍 |
+| `thumbsdown` | `دیسلایک` | 👎 |
+| `ok` | `اوکی` | 👌 |
+| `peace` | `صلح` | ✌️ |
+| `clap` | `تشویق` | 👏 |
+
+### 🔥 Objects
+| English | Persian | Emoji |
+|---------|---------|-------|
+| `fire` | `آتش` | 🔥 |
+| `star` | `ستاره` | ⭐ |
+| `moon` | `ماه` | 🌙 |
+| `sun` | `خورشید` | ☀️ |
+
+### ⚽ Sports
+| English | Persian | Emoji |
+|---------|---------|-------|
+| `football` | `فوتبال` | ⚽ |
+| `basketball` | `بسکتبال` | 🏀 |
+
+### 🌧️ Weather
+| English | Persian | Emoji |
+|---------|---------|-------|
+| `rain` | `باران` | 🌧️ |
+| `snow` | `برف` | ❄️ |
+| `thunder` | `رعد` | ⛈️ |
+
+### 🎉 Party/Celebration
+| English | Persian | Emoji |
+|---------|---------|-------|
+| `party` | `جشن` | 🎉 |
+| `cake` | `کیک` | 🎂 |
+| `gift` | `هدیه` | 🎁 |
+
+### 📱 Technology
+| English | Persian | Emoji |
+|---------|---------|-------|
+| `phone` | `تلفن` | 📱 |
+| `computer` | `کامپیوتر` | 💻 |
+
+### 💰 Money
+| English | Persian | Emoji |
+|---------|---------|-------|
+| `money` | `پول` | 💰 |
+| `dollar` | `دلار` | 💵 |
+
+### 🕐 Time
+| English | Persian | Emoji |
+|---------|---------|-------|
+| `clock` | `ساعت` | 🕐 |
+
+### 🚗 Transportation
+| English | Persian | Emoji |
+|---------|---------|-------|
+| `car` | `ماشین` | 🚗 |
+| `plane` | `هواپیما` | ✈️ |
+
+### 🌸 Flowers/Nature
+| English | Persian | Emoji |
+|---------|---------|-------|
+| `flower` | `گل` | 🌸 |
+| `rose` | `رز` | 🌹 |
+| `tree` | `درخت` | 🌳 |
+
+## 🛠️ Technical Details
+
+### Built With
+- **Framework**: [grammY](https://grammy.dev/) - Modern Telegram Bot Framework
+- **Runtime**: Node.js with TypeScript
+- **Deployment**: [Vercel](https://vercel.com/) Serverless Functions
+- **Template**: Based on [grammy-vercel-boilerplate](https://github.com/neumanf/grammy-vercel-boilerplate)
+
+### Features
+- **Persian Number Processing**: Converts Persian numerals (۰۱۲۳۴۵۶۷۸۹) to English for processing
+- **Optimized Parsing**: Direct character code conversion without string replacement
+- **Serverless Architecture**: Fast cold starts and automatic scaling
+- **Inline Query Support**: Works in any chat without adding the bot
+
+## 🚀 Deploy Your Own
+
+### Prerequisites
+1. Create a bot with [@BotFather](https://t.me/BotFather)
+2. Get your bot token
+3. Enable inline mode with `/setinline` command
+
+### Quick Deploy
+
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/yourusername/emoji-expander-bot)
+
+### Manual Setup
+
+1. **Clone the repository**
+   ```bash
+   git clone https://github.com/yourusername/emoji-expander-bot
+   cd emoji-expander-bot
+   ```
+
+2. **Install dependencies**
+   ```bash
+   npm install
+   ```
+
+3. **Set up environment variables**
+   ```bash
+   cp .env.example .env
+   # Edit .env and add your BOT_TOKEN
+   ```
+
+4. **Deploy to Vercel**
+   ```bash
+   npm install -g vercel
+   vercel --prod
+   ```
+
+5. **Set webhook**
+   ```bash
+   # Replace YOUR_BOT_TOKEN and YOUR_VERCEL_URL
+   curl "https://api.telegram.org/botYOUR_BOT_TOKEN/setWebhook?url=YOUR_VERCEL_URL/api/webhook"
+   ```
+
+6. **Enable inline mode**
+   - Send `/setinline` to @BotFather
+   - Select your bot
+   - Set placeholder text
+
+### Environment Variables
+
+| Variable | Description | Required |
+|----------|-------------|----------|
+| `BOT_TOKEN` | Your Telegram bot token from @BotFather | ✅ |
+
+## 📝 Examples
+
+### English Examples
+```
+@emoji_expander_bot happy.3    → 😊😊😊
+@emoji_expander_bot fire.7     → 🔥🔥🔥🔥🔥🔥🔥
+@emoji_expander_bot party.2    → 🎉🎉
 ```
 
-## Contributing
+### Persian Examples
+```
+@emoji_expander_bot خنده.۵     → 😂😂😂😂😂
+@emoji_expander_bot قلب.۱۰     → ❤️❤️❤️❤️❤️❤️❤️❤️❤️❤️
+@emoji_expander_bot آتش.۳      → 🔥🔥🔥
+```
 
-Pull requests are welcome. If you have any suggestions, you can also create an [issue](https://github.com/neumanf/grammy-vercel-boilerplate/issues).
+### Mixed Examples
+```
+@emoji_expander_bot smile.۴    → 😂😂😂😂
+@emoji_expander_bot ماه.5      → 🌙🌙🌙🌙🌙
+```
 
-## License
+## 🤝 Contributing
 
-[MIT](https://choosealicense.com/licenses/mit/)
+Contributions are welcome! Please feel free to submit a Pull Request.
+
+### Adding New Emojis
+1. Edit `src/core/bot/index.ts`
+2. Add your emoji to the `emojies` object
+3. Update this README
+4. Submit a PR
+
+## 📄 License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## 🔗 Links
+
+- **Bot**: [@emoji_expander_bot](https://t.me/emoji_expander_bot)
+- **Telegram Bot API**: [Documentation](https://core.telegram.org/bots/api)
+- **grammY Framework**: [Website](https://grammy.dev/)
+- **Vercel**: [Platform](https://vercel.com/)
+
+## 🙏 Acknowledgments
+
+- [grammY](https://grammy.dev/) for the excellent Telegram bot framework
+- [neumanf](https://github.com/neumanf) for the Vercel boilerplate
+- [Vercel](https://vercel.com/) for the serverless platform
+
+---
+
+<div align="center">
+  <strong>Made with ❤️ for the Telegram community</strong>
+</div>
