@@ -199,13 +199,13 @@ Works with Persian keywords and numbers:
 
 ### Quick Deploy
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/yourusername/emoji-expander-bot)
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/mobinshahidi/emoji-expander-bot)
 
 ### Manual Setup
 
 1. **Clone the repository**
    ```bash
-   git clone https://github.com/yourusername/emoji-expander-bot
+   git clone https://github.com/mobinshahidi/emoji-expander-bot
    cd emoji-expander-bot
    ```
 
